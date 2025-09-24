@@ -1,9 +1,8 @@
-The `llm_classifier` directory is crucial within the project, containing Python scripts that interact with a Language Model (LLM) for classification purposes, primarily utilizing the Mistral model.
+# DIR_HASH: 2c3884ff5332535a7e4aa5b4e410b051ad93d566e74f868b7e095d74c5957a70
+The `LLMInterface` directory at `local_path/llm_classifier` contains Python scripts that facilitate communication with a Language Model (LLM) for classification purposes, primarily using the Mistral model.
 
-The main script, `LLMInterface.py`, serves as an interface to send class descriptions to the LLM for classification, featuring the `send_class_to_llm()` function for API communication and response processing.
+The primary component in this directory is the `LLMInterface.py` file, which defines an interface to send class descriptions for classification and manages interactions with the LLM as part of its business logic.
 
-Separately, `systemPrompts.py` (unspecified path) defines a **PromptManager** class managing interactions with the LLM and providing functions for adding and retrieving system prompts, acting as a bridge between the system and business logic without containing UI or data access components.
+Separately, systemPrompts.py is not part of this directory but serves another purpose—defining and managing system prompts for interacting with the LLM. The PromptManager class within this file provides functions for adding and retrieving system prompts.
 
-Additionally, there exists `generate_docs.py` (file path unspecified), which generates a recursive summary of the source code structure in a project. This file does not define any classes or interfaces but utilizes functions from LLMInterface for generating human-readable summaries of the source code.
-
-Functions within generate_docs.py include computing file hashes, reading summary hashes, checking for ignored directories and source files, ensuring necessary directories exist, processing directories recursively, and initiating the documentation process.
+Outside of this directory, there exists a script named `generate_docs.py` (file path unspecified) that generates summaries of given directories' contents recursively. This file does not define any classes or interfaces but contains various functions to compute SHA256 hashes, process directories, and ensure the existence of specific directories for generating documentation.

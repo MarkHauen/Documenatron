@@ -1,29 +1,18 @@
-# HASH: 6f76472ecaca8a22696d73baeaecfc9c750e7eed884a068c64060c0d42a889d2
-File Path: [Not provided]
+# HASH: 9447c1b2a45704f71176d6c7ada0155c73de9066a1dec61fc2b552ce429c6778
+File Path: <not provided>
 
-The overall purpose of this file is to generate a comprehensive, recursive summary of the source code structure in a project, including subdirectories and files with specific extensions. It utilizes an external Language Model Interface (LLM) for generating human-readable summaries of the source code.
+This file's purpose is to generate a summary of the contents (subdirectories and source files) of a given directory, recursively. It computes SHA256 hashes for each subdirectory and source file, creates or updates summary files for each file, and generates a combined summary for each directory based on its subdirectory and file summaries.
 
-Defined Classes/Structs/Interfaces:
-1. None - This file does not define any classes, structs or interfaces. However, it uses the `send_class_to_llm` function which likely resides in the LLMInterface module.
+Classes, Structs, or Interfaces: None (This is a Python script and does not define classes, structs, or interfaces.)
 
-Methods and Properties (Functionality):
-1. compute_file_hash(content: str) -> str
-   - Computes SHA256 hash of file content as a hex string.
+Here's a list of functions in this file along with their short descriptions:
 
-2. read_summary_hash(summary_path: Path) -> str
-   - Reads the hash from the first line of a summary file, if present.
-
-3. should_ignore_dir(dirname: str) -> bool
-   - Checks if a given directory name is in the list of ignored directories and returns True if it is.
-
-4. is_source_file(filename: str) -> bool
-   - Determines whether a given filename has one of the supported source code extensions, and returns True if it does.
-
-5. ensure_docs_dir(path: Path) -> Path
-   - Ensures that a directory named "_llm_docs" exists in the provided path or creates it if it doesn't already exist.
-
-6. process_directory(dir_path: Path) -> str
-   - Recursively processes a directory by summarizing all subdirectories, files, and generating an overall summary of the entire directory based on subdir + file summaries. It returns the directory summary text so that the parent can include it.
-
-7. main()
-   - Initializes the recursive documentation process for the given root directory (can be specified as a command-line argument), processes the directory, and saves top-level summaries if present.
+1. `compute_directory_hash(subdir_hashes, file_hashes)` - Computes a combined hash for a directory from its subdirectory and file hashes.
+2. `read_directory_summary_hash(summary_path: Path) -> str` - Reads the hash from the first line of a directory summary file, if present.
+3. `compute_file_hash(content: str) -> str` - Computes SHA256 hash of file content as a hex string.
+4. `read_summary_hash(summary_path: Path) -> str` - Reads the hash from the first line of a summary file, if present.
+5. `should_ignore_dir(dirname: str) -> bool` - Checks whether a given directory should be ignored based on a predefined list of directories to ignore (blacklist).
+6. `is_source_file(filename: str) -> bool` - Checks if a file has a specified extension that is considered "source code".
+7. `ensure_docs_dir(path: Path) -> Path` - Ensures the existence of a specific directory named "_llm_docs" in the given path.
+8. `process_directory(dir_path: Path) -> str` - Recursively processes a directory, summarizes all subdirectories and files, and returns the combined summary text.
+9. `main()` - Executes the recursive documentation process for a root directory specified as an argument or the parent directory of the current file if no argument is provided.

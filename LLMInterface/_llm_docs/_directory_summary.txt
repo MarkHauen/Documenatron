@@ -1,7 +1,8 @@
+# DIR_HASH: c8ae7bd284d75ea9f4ef0958349e74d92a574291c21ce4348ef805154a10091b
 Directory Path: local_path/llm_classifier
 
-This directory houses essential Python scripts for interacting with a Language Model (LLM) for classification purposes, primarily utilizing the Mistral model. The primary script, LLMInterface.py, serves as an interface to send class descriptions to the LLM for classification.
+This directory houses essential Python scripts that facilitate communication with a Language Model (LLM) for classification purposes, specifically utilizing the Mistral model. The primary file, LLMInterface.py, defines an interface to send class descriptions for classification.
 
-The LLMInterface.py file does not define any classes or structures but features the `send_class_to_llm()` function that communicates with the LLM API, sends class descriptions, and returns the response. This function constructs a POST request, sends it to the specified URL, processes the response stream line by line until it receives the classification result or encounters an error, skipping any exceptions during processing.
+In this directory, LLMInterface.py implements a function `send_class_to_llm()` that communicates with the LLM API, constructing POST requests and parsing responses line by line until it receives the classification result or encounters errors. It doesn't define any classes or structures but manages interactions with the LLM as part of its business logic.
 
-In a separate file (systemPrompts.py, unspecified path), a class named **PromptManager** is defined, focusing on managing interactions with the LLM and providing functions for adding and retrieving system prompts. This file does not contain any UI or data access components; instead, it serves as a bridge between the system and the business logic.
+Separately, systemPrompts.py is not specified in this directory but serves another purpose—defining and managing system prompts for interacting with the LLM. The PromptManager class within this file provides functions for adding and retrieving system prompts, acting as a bridge between the system and business logic without any UI or data access components.

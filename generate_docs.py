@@ -5,6 +5,26 @@ from pathlib import Path
 from LLMInterface.LLMInterface import send_class_to_llm
 from LLMInterface.systemPrompts import FILE_SUMMARY_PROMPT, DIR_SUMMARY_PROMPT, ROOT_SUMMARY_PROMPT
 
+def compute_directory_hash(subdir_hashes, file_hashes):
+    """Compute a combined hash for a directory from its subdirectory and file hashes."""
+    # Sort to ensure consistent order
+    all_hashes = sorted(subdir_hashes) + sorted(file_hashes)
+    combined = ''.join(all_hashes)
+    return hashlib.sha256(combined.encode('utf-8')).hexdigest()
+
+def read_directory_summary_hash(summary_path: Path) -> str:
+    """Read the hash from the first line of a directory summary file, if present."""
+    if not summary_path.exists():
+        return ""
+    try:
+        with open(summary_path, "r", encoding="utf-8", errors="ignore") as f:
+            first_line = f.readline()
+            if first_line.startswith("# DIR_HASH: "):
+                return first_line.strip().split("# DIR_HASH: ", 1)[1]
+    except Exception:
+        pass
+    return ""
+
 def compute_file_hash(content: str) -> str:
     """Compute SHA256 hash of file content as a hex string."""
     return hashlib.sha256(content.encode('utf-8')).hexdigest()
@@ -75,16 +95,24 @@ def process_directory(dir_path: Path) -> str:
 
     # --- 1. Recurse into subdirectories ---
     subdir_summaries = []
+    subdir_hashes = []
     for entry in dir_path.iterdir():
         if entry.is_dir() and not should_ignore_dir(entry.name):
             subdir_summary_text = process_directory(entry)
+            # Read the hash from the subdirectory's summary file
+            subdir_docs_dir = ensure_docs_dir(entry)
+            subdir_summary_file = subdir_docs_dir / "_directory_summary.txt"
+            subdir_hash = read_directory_summary_hash(subdir_summary_file)
             if subdir_summary_text.strip():
                 subdir_summaries.append(
                     f"### Subdirectory: {entry.name}\n{subdir_summary_text}"
                 )
+            if subdir_hash:
+                subdir_hashes.append(subdir_hash)
 
     # --- 2. Summarize files in this directory ---
     file_summaries = []
+    file_hashes = []
     for entry in dir_path.iterdir():
         if entry.is_file() and is_source_file(entry.name):
             file_summary_path = docs_dir / f"{entry.name}.summary.txt"
@@ -110,6 +138,7 @@ def process_directory(dir_path: Path) -> str:
                 file_summaries.append(
                     f"### File: {entry.name}\n{summary_text}"
                 )
+                file_hashes.append(file_hash)
             except Exception as e:
                 print(f"Error reading {entry}: {e}")
 
@@ -124,33 +153,37 @@ def process_directory(dir_path: Path) -> str:
 
     # --- 4. Summarize the directory itself if there’s content ---
     dir_summary_text = ""
+    dir_summary_file = docs_dir / "_directory_summary.txt"
+    dir_hash = compute_directory_hash(subdir_hashes, file_hashes)
+    existing_dir_hash = read_directory_summary_hash(dir_summary_file)
     if combined_text:
-        print(f"Summarizing directory: {dir_path}")
-        # Check if we are at the root directory
-        if dir_path.parent == dir_path:  # This is the root directory
-            dir_summary_text = send_class_to_llm(combined_text, ROOT_SUMMARY_PROMPT)
+        if dir_hash == existing_dir_hash:
+            print(f"Skipping unchanged directory: {dir_path}")
+            # Read the summary for inclusion in parent summary
+            try:
+                with open(dir_summary_file, "r", encoding="utf-8", errors="ignore") as out:
+                    lines = out.readlines()
+                    dir_summary_text = ''.join(lines[1:]) if lines and lines[0].startswith('# DIR_HASH: ') else ''.join(lines)
+            except Exception:
+                dir_summary_text = ''
         else:
-            dir_summary_text = send_class_to_llm(combined_text, DIR_SUMMARY_PROMPT)
+            print(f"Summarizing directory: {dir_path}")
+            # Check if we are at the root directory
+            if dir_path.parent == dir_path:  # This is the root directory
+                dir_summary_text = send_class_to_llm(combined_text, ROOT_SUMMARY_PROMPT)
+            else:
+                dir_summary_text = send_class_to_llm(combined_text, DIR_SUMMARY_PROMPT)
 
-        # Save directory-level summary
-        dir_summary_file = docs_dir / "_directory_summary.txt"
-        with open(dir_summary_file, "w", encoding="utf-8") as out:
-            out.write(dir_summary_text)
+            # Save directory-level summary with hash
+            with open(dir_summary_file, "w", encoding="utf-8") as out:
+                out.write(f"# DIR_HASH: {dir_hash}\n{dir_summary_text}")
 
     return dir_summary_text
 
 def main():
     root = sys.argv[1] if len(sys.argv) > 1 else Path(__file__).parent
     print(f"Starting recursive documentation in: {root}")
-    root_summary = process_directory(root)
-
-    # Optionally store a top-level summary at the project root
-    if root_summary.strip():
-        root_docs_dir = ensure_docs_dir(root)
-        root_summary_file = root_docs_dir / "_project_summary.txt"
-        with open(root_summary_file, "w", encoding="utf-8") as out:
-            out.write(root_summary)
-
+    process_directory(root)
     print("Recursive documentation complete!")
 
 if __name__ == "__main__":
