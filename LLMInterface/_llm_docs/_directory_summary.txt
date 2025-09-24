@@ -1,8 +1,8 @@
-# DIR_HASH: c8ae7bd284d75ea9f4ef0958349e74d92a574291c21ce4348ef805154a10091b
-Directory Path: local_path/llm_classifier
+# DIR_HASH: bd3a403c883583deb52601bf866c82e4ae927e58742e7bcbc69c4d7030cddbff
+The specified directory contains two Python scripts: `LLMInterface.py` and `systemPrompts.py`.
 
-This directory houses essential Python scripts that facilitate communication with a Language Model (LLM) for classification purposes, specifically utilizing the Mistral model. The primary file, LLMInterface.py, defines an interface to send class descriptions for classification.
+The `LLMInterface.py` script provides functionality to interact with an external Large Language Model (LLM). It defines a single function, `send_class_to_llm`, which takes in a class description and a system prompt as input and sends them to the LLM model, returning the generated response.
 
-In this directory, LLMInterface.py implements a function `send_class_to_llm()` that communicates with the LLM API, constructing POST requests and parsing responses line by line until it receives the classification result or encounters errors. It doesn't define any classes or structures but manages interactions with the LLM as part of its business logic.
+On the other hand, `systemPrompts.py` contains a class called `PromptManager`. This class is designed for managing system prompts used when interacting with the LLM. It provides methods for adding, retrieving, and removing predefined prompts, allowing for easy modification or addition of these prompts as needed.
 
-Separately, systemPrompts.py is not specified in this directory but serves another purpose—defining and managing system prompts for interacting with the LLM. The PromptManager class within this file provides functions for adding and retrieving system prompts, acting as a bridge between the system and business logic without any UI or data access components.
+In summary, this directory houses utilities for communicating with an external LLM. The `LLMInterface.py` script handles the sending of class descriptions and system prompts to the model, while the `systemPrompts.py` script manages a set of predefined prompts for communication with the LLM. These components work together to facilitate interactions between the project and the external LLM model.

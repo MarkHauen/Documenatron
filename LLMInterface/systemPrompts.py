@@ -8,6 +8,7 @@ Requirements:
 - List each class, struct, or interface defined in this file.
   - Under each class, list its methods and properties.
   - For each method, provide a short description of what it does (1–2 sentences).
+  - Include line numbers of where each class and method is defined. for example: `ClassName (lines 10-50)`.
 - Do not explain language syntax. Focus only on describing functionality.
 - Keep the writing concise and technical, as if another developer will use this as a reference.
 """

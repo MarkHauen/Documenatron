@@ -1,8 +1,9 @@
-# DIR_HASH: 2c3884ff5332535a7e4aa5b4e410b051ad93d566e74f868b7e095d74c5957a70
-The `LLMInterface` directory at `local_path/llm_classifier` contains Python scripts that facilitate communication with a Language Model (LLM) for classification purposes, primarily using the Mistral model.
+# DIR_HASH: 08ad413e7ebdeb25c9d4932ca96e92096c64c3dd6e80aaed382678246bd7d864
+The specified directory, `LLMInterface`, is a crucial part of the project and serves as a communication layer between the system and an external Large Language Model (LLM).
 
-The primary component in this directory is the `LLMInterface.py` file, which defines an interface to send class descriptions for classification and manages interactions with the LLM as part of its business logic.
+- `LLMInterface.py` is responsible for sending class descriptions and system prompts to the LLM model and receiving generated responses from it through the `send_class_to_llm` function.
+- `systemPrompts.py` contains the `PromptManager` class, which manages a set of predefined system prompts used when interacting with the LLM.
 
-Separately, systemPrompts.py is not part of this directory but serves another purpose—defining and managing system prompts for interacting with the LLM. The PromptManager class within this file provides functions for adding and retrieving system prompts.
+A separate script, `generate_docs.py`, is designed to generate structured documentation for source code files and directories in a given project using the Large Language Model (LLM) for content summarization. This script does not define any methods or properties related to the `LLMInterface` but utilizes it to gather class information during the documentation generation process.
 
-Outside of this directory, there exists a script named `generate_docs.py` (file path unspecified) that generates summaries of given directories' contents recursively. This file does not define any classes or interfaces but contains various functions to compute SHA256 hashes, process directories, and ensure the existence of specific directories for generating documentation.
+In summary, both the `LLMInterface` and `generate_docs.py` work together to facilitate communication between the system and an external LLM, as well as generating structured documentation using the LLM for source code files in the project.

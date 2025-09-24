@@ -1,13 +1,15 @@
-# HASH: 17acb72930908ffaf50499d7f1ea5bccf842ef30ca14981b07087c6943a378eb
-File Path: <unspecified>
+# HASH: b17d169d8ec3505eb73603314509d3c3032839eefbd4ee07cf92d876786bf258
+File Path: [Path_to_the_file] (Provided Externally)
 
-File Purpose Summary: This file defines and manages system prompts used for interacting with the Language Learning Model (LLM).
+File Summary: This file defines a class for managing system prompts used in interacting with the Large Language Model (LLM).
 
-Defined Classes/Structs/Interfaces:
-1. **PromptManager**
-   - Properties: None
+Class Definitions:
+1. `PromptManager` (lines 12-47)
+   - Properties:
+     - `prompts` (line 15): A dictionary that maps prompt names to their corresponding prompts.
    - Methods:
-      - `add_prompt(self, prompt)`: Adds a new system prompt to the manager.
-      - `get_prompt(self, prompt_id)`: Retrieves a specific system prompt by its ID.
+     - `add_prompt(prompt_name, prompt)` (line 19): Adds a new system prompt with the given name and content.
+     - `get_prompt(prompt_name)` (line 25): Retrieves the system prompt associated with the provided name.
+     - `remove_prompt(prompt_name)` (line 31): Removes the system prompt associated with the provided name.
 
-This file focuses on managing interactions with the LLM and provides functions for adding and retrieving system prompts. It does not contain any UI or data access components; instead, it serves as a bridge between the system and the business logic.
+The `PromptManager` class is used to store and manage a set of predefined prompts for communicating with the LLM, allowing for easy modification or addition of these prompts as needed.
