@@ -51,8 +51,12 @@ IGNORED_DIRS = {
     ".hg",
     ".idea",
     ".vscode",
+    ".firebase",
     "bin",
     "obj",
+    "lib",
+    "docs",
+    "assets",
     "node_modules",
     "packages",
     "venv",
@@ -181,7 +185,10 @@ def process_directory(dir_path: Path) -> str:
     return dir_summary_text
 
 def main():
-    root = sys.argv[1] if len(sys.argv) > 1 else Path(__file__).parent
+    root = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else Path(__file__).parent.resolve()
+    if not root.exists() or not root.is_dir():
+        print(f"Error: The specified root path '{root}' does not exist or is not a directory.")
+        sys.exit(1)
     print(f"Starting recursive documentation in: {root}")
     process_directory(root)
     print("Recursive documentation complete!")

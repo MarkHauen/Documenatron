@@ -1,9 +1,9 @@
-# DIR_HASH: 08ad413e7ebdeb25c9d4932ca96e92096c64c3dd6e80aaed382678246bd7d864
-The specified directory, `LLMInterface`, is a crucial part of the project and serves as a communication layer between the system and an external Large Language Model (LLM).
+# DIR_HASH: d1b7edea90e5db0f27b2b53074b51130832408dcb911b1749ede8c9772d24c76
+The `LLMInterface` subdirectory is central to communicating with an external Large Language Model (LLM) within the project. The directory consists of two scripts:
 
-- `LLMInterface.py` is responsible for sending class descriptions and system prompts to the LLM model and receiving generated responses from it through the `send_class_to_llm` function.
-- `systemPrompts.py` contains the `PromptManager` class, which manages a set of predefined system prompts used when interacting with the LLM.
+1. `LLMInterface.py` - This script defines a function for sending class descriptions and system prompts to the LLM model, receiving generated responses in return.
+2. `systemPrompts.py` - Contains a `PromptManager` class designed to manage predefined system prompts used when interacting with the LLM, offering methods for adding, retrieving, and removing prompts as needed.
 
-A separate script, `generate_docs.py`, is designed to generate structured documentation for source code files and directories in a given project using the Large Language Model (LLM) for content summarization. This script does not define any methods or properties related to the `LLMInterface` but utilizes it to gather class information during the documentation generation process.
+These components work together to facilitate interactions between the project and the external LLM model.
 
-In summary, both the `LLMInterface` and `generate_docs.py` work together to facilitate communication between the system and an external LLM, as well as generating structured documentation using the LLM for source code files in the project.
+In another part of the project, `generate_docs.py` is responsible for generating a summary of content within a specified directory, including subdirectories and source files. The script computes file hashes, reads summaries, checks if directories or files should be ignored, creates required directories, processes directories recursively, and initializes the script with a specified root directory before calling `process_directory` on it. However, this script does not define any classes or interfaces, but instead focuses on various methods for handling specific tasks related to generating file summaries and managing hashes.
