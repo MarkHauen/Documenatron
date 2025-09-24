@@ -5,6 +5,36 @@ from pathlib import Path
 from LLMInterface.LLMInterface import send_class_to_llm
 from LLMInterface.systemPrompts import FILE_SUMMARY_PROMPT, DIR_SUMMARY_PROMPT, ROOT_SUMMARY_PROMPT
 
+DOCS_DIR_NAME = "_llm_docs"
+
+# Directories to ignore (blacklist)
+IGNORED_DIRS = {
+    ".git",
+    ".svn",
+    ".hg",
+    ".idea",
+    ".vscode",
+    ".firebase",
+    "bin",
+    "obj",
+    "lib",
+    "docs",
+    "assets",
+    "node_modules",
+    "packages",
+    "venv",
+    "__pycache__",
+    "dist",
+    "build",
+    DOCS_DIR_NAME
+}
+
+# File extensions considered "source code"
+SOURCE_EXTENSIONS = {
+    ".py", ".cs", ".js", ".ts", ".jsx", ".tsx", ".java", ".cpp", ".c", ".h",
+    ".html", ".css", ".scss", ".go", ".rb", ".php", ".swift", ".m", ".mm"
+}
+
 def compute_directory_hash(subdir_hashes, file_hashes):
     """Compute a combined hash for a directory from its subdirectory and file hashes."""
     # Sort to ensure consistent order
@@ -41,36 +71,6 @@ def read_summary_hash(summary_path: Path) -> str:
     except Exception:
         pass
     return ""
-
-DOCS_DIR_NAME = "_llm_docs"
-
-# Directories to ignore (blacklist)
-IGNORED_DIRS = {
-    ".git",
-    ".svn",
-    ".hg",
-    ".idea",
-    ".vscode",
-    ".firebase",
-    "bin",
-    "obj",
-    "lib",
-    "docs",
-    "assets",
-    "node_modules",
-    "packages",
-    "venv",
-    "__pycache__",
-    "dist",
-    "build",
-    DOCS_DIR_NAME
-}
-
-# File extensions considered "source code"
-SOURCE_EXTENSIONS = {
-    ".py", ".cs", ".js", ".ts", ".jsx", ".tsx", ".java", ".cpp", ".c", ".h",
-    ".html", ".css", ".scss", ".go", ".rb", ".php", ".swift", ".m", ".mm"
-}
 
 def should_ignore_dir(dirname: str) -> bool:
     return dirname in IGNORED_DIRS
