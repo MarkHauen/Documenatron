@@ -1,0 +1,14 @@
+# HASH: 651484fc12e1b244b1a0369d2596b8bc0445d9be77ca8fef8f9b89f46eec2a8d
+File Path: local_path/llm_classifier.py
+
+This file contains a Python script that implements an interface for sending class descriptions to a Language Model (LLM) for classification using the Mistral model.
+
+Classes, Structs, or Interfaces defined in this file:
+1. None (The script does not define any classes or structures; it only defines a function).
+
+Function: send_class_to_llm(class_text: str, system_prompt: str) -> str
+- Purpose: This function sends a class description to the LLM for classification using the Mistral model and returns the response.
+
+Methods and Properties (Function has no properties):
+1. send_class_to_llm()
+   - Description: Sends the provided class text to the specified LLM API using the given model (Mistral) and system prompt, and returns the response. The function first constructs a POST request with the necessary parameters, sends it to the specified URL, and processes the response stream line by line until it receives the classification result or encounters an error. If an exception occurs during processing, it is skipped, and the function continues with the next line.

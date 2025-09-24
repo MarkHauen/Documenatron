@@ -1,0 +1,9 @@
+The `llm_classifier` directory is crucial within the project, containing Python scripts that interact with a Language Model (LLM) for classification purposes, primarily utilizing the Mistral model.
+
+The main script, `LLMInterface.py`, serves as an interface to send class descriptions to the LLM for classification, featuring the `send_class_to_llm()` function for API communication and response processing.
+
+Separately, `systemPrompts.py` (unspecified path) defines a **PromptManager** class managing interactions with the LLM and providing functions for adding and retrieving system prompts, acting as a bridge between the system and business logic without containing UI or data access components.
+
+Additionally, there exists `generate_docs.py` (file path unspecified), which generates a recursive summary of the source code structure in a project. This file does not define any classes or interfaces but utilizes functions from LLMInterface for generating human-readable summaries of the source code.
+
+Functions within generate_docs.py include computing file hashes, reading summary hashes, checking for ignored directories and source files, ensuring necessary directories exist, processing directories recursively, and initiating the documentation process.

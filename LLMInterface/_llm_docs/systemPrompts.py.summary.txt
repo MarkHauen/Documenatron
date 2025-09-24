@@ -1,0 +1,13 @@
+# HASH: 17acb72930908ffaf50499d7f1ea5bccf842ef30ca14981b07087c6943a378eb
+File Path: <unspecified>
+
+File Purpose Summary: This file defines and manages system prompts used for interacting with the Language Learning Model (LLM).
+
+Defined Classes/Structs/Interfaces:
+1. **PromptManager**
+   - Properties: None
+   - Methods:
+      - `add_prompt(self, prompt)`: Adds a new system prompt to the manager.
+      - `get_prompt(self, prompt_id)`: Retrieves a specific system prompt by its ID.
+
+This file focuses on managing interactions with the LLM and provides functions for adding and retrieving system prompts. It does not contain any UI or data access components; instead, it serves as a bridge between the system and the business logic.
