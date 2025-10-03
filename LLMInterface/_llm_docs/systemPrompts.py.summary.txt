@@ -1,15 +1,14 @@
-# HASH: b17d169d8ec3505eb73603314509d3c3032839eefbd4ee07cf92d876786bf258
-File Path: [Path_to_the_file] (Provided Externally)
+# HASH: 87170e62fcf39407564956adb13a14a9265dd536d9bfe9b8d58b25aa5fa68d90
+Sure, I can help you generate structured documentation for the given file and directory based on the prompts provided. Let's start with the specific file first.
 
-File Summary: This file defines a class for managing system prompts used in interacting with the Large Language Model (LLM).
+### File Summary: C:\Users\markh\source\repos\Documenatron\LLMInterface\systemPrompts.py
 
-Class Definitions:
-1. `PromptManager` (lines 12-47)
-   - Properties:
-     - `prompts` (line 15): A dictionary that maps prompt names to their corresponding prompts.
-   - Methods:
-     - `add_prompt(prompt_name, prompt)` (line 19): Adds a new system prompt with the given name and content.
-     - `get_prompt(prompt_name)` (line 25): Retrieves the system prompt associated with the provided name.
-     - `remove_prompt(prompt_name)` (line 31): Removes the system prompt associated with the provided name.
+#### Overall Purpose:
+The `systemPrompts.py` file in the LLMInterface project is designed to hold the system prompts used for interacting with a language model (LLM). It provides templates and configurations necessary for generating and managing prompt interactions within the application.
 
-The `PromptManager` class is used to store and manage a set of predefined prompts for communicating with the LLM, allowing for easy modification or addition of these prompts as needed.
+#### Classes and Methods:
+1. **FILE_SUMMARY_PROMPT** (line 3)
+   - Summary: Defines the structure of a file summary prompt, which is used to generate detailed documentation for individual files in the project.
+
+### Directory Summary:
+Since you didn't provide specific details about the directory context, I can only summarize based on the provided file summary. If there are other Python files or modules within the same directory that you want summarized, please provide more information so I can include them in the analysis.

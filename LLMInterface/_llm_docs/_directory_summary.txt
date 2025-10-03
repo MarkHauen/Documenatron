@@ -1,8 +1,20 @@
-# DIR_HASH: bd3a403c883583deb52601bf866c82e4ae927e58742e7bcbc69c4d7030cddbff
-The specified directory contains two Python scripts: `LLMInterface.py` and `systemPrompts.py`.
+# DIR_HASH: 2a9a03003718ec63a43ddb8a14d4c9fc9c6351972d3b98986aaed08f73f2df2c
+### DIRECTORY: C:\Users\markh\source\repos\Documenatron\LLMInterface
 
-The `LLMInterface.py` script provides functionality to interact with an external Large Language Model (LLM). It defines a single function, `send_class_to_llm`, which takes in a class description and a system prompt as input and sends them to the LLM model, returning the generated response.
+#### Directory Purpose and Role:
+The `LLMInterface` directory is part of a larger project aimed at enhancing documentation generation for software projects using language models (LLMs). It serves as an interface between the local LLM server and external applications, facilitating the extraction and processing of class definitions to generate detailed documentation. This integration leverages advanced natural language processing capabilities provided by the LLM to improve understanding and documentation of codebases.
 
-On the other hand, `systemPrompts.py` contains a class called `PromptManager`. This class is designed for managing system prompts used when interacting with the LLM. It provides methods for adding, retrieving, and removing predefined prompts, allowing for easy modification or addition of these prompts as needed.
+#### Major Components:
+1. **LLMInterface.py**:
+   - **Purpose:** This script enables communication between a local LLM server and an external application, allowing it to send class definitions along with optional project context for generating detailed documentation or insights from the LLM.
+   - **Methods:**
+     - `send_class_to_llm(class_text: str, system_prompt: str, project_context: str = "", file_path: str = "") -> str`: Sends class definition and optional project context to an LLM server for detailed documentation generation.
 
-In summary, this directory houses utilities for communicating with an external LLM. The `LLMInterface.py` script handles the sending of class descriptions and system prompts to the model, while the `systemPrompts.py` script manages a set of predefined prompts for communication with the LLM. These components work together to facilitate interactions between the project and the external LLM model.
+2. **systemPrompts.py**:
+   - **Purpose:** This file holds the system prompts used for interacting with a language model (LLM). It provides templates and configurations necessary for generating and managing prompt interactions within the application.
+   - **Methods:**
+     - `FILE_SUMMARY_PROMPT` (line 3): Defines the structure of a file summary prompt, which is used to generate detailed documentation for individual files in the project.
+
+### Summary of Files:
+- **LLMInterface.py**: This Python script provides functions to interact with an LLM server by sending class definitions and optional project context. It constructs prompts dynamically based on provided inputs to facilitate detailed documentation generation.
+- **systemPrompts.py**: Contains predefined system prompts for interacting with the LLM, tailored for generating file summary prompts used in the documentation process.

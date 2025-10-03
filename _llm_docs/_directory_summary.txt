@@ -1,9 +1,65 @@
-# DIR_HASH: d1b7edea90e5db0f27b2b53074b51130832408dcb911b1749ede8c9772d24c76
-The `LLMInterface` subdirectory is central to communicating with an external Large Language Model (LLM) within the project. The directory consists of two scripts:
+# DIR_HASH: 167e84525d8f98674bd99678c61c772efef04c3c1a931c68e7610f59358de95e
+```markdown
+### DIRECTORY: C:\Users\markh\source\repos\Documenatron\LLMInterface
 
-1. `LLMInterface.py` - This script defines a function for sending class descriptions and system prompts to the LLM model, receiving generated responses in return.
-2. `systemPrompts.py` - Contains a `PromptManager` class designed to manage predefined system prompts used when interacting with the LLM, offering methods for adding, retrieving, and removing prompts as needed.
+#### Directory Purpose and Role:
+The `LLMInterface` directory is part of a larger project aimed at enhancing documentation generation for software projects using language models (LLMs). It serves as an interface between the local LLM server and external applications, facilitating the extraction and processing of class definitions to generate detailed documentation. This integration leverages advanced natural language processing capabilities provided by the LLM to improve understanding and documentation of codebases.
 
-These components work together to facilitate interactions between the project and the external LLM model.
+#### Major Components:
+1. **LLMInterface.py**:
+   - **Purpose:** This script enables communication between a local LLM server and an external application, allowing it to send class definitions along with optional project context for generating detailed documentation or insights from the LLM.
+   - **Methods:**
+     - `send_class_to_llm(class_text: str, system_prompt: str, project_context: str = "", file_path: str = "") -> str`: Sends class definition and optional project context to an LLM server for detailed documentation generation.
 
-In another part of the project, `generate_docs.py` is responsible for generating a summary of content within a specified directory, including subdirectories and source files. The script computes file hashes, reads summaries, checks if directories or files should be ignored, creates required directories, processes directories recursively, and initializes the script with a specified root directory before calling `process_directory` on it. However, this script does not define any classes or interfaces, but instead focuses on various methods for handling specific tasks related to generating file summaries and managing hashes.
+2. **systemPrompts.py**:
+   - **Purpose:** This file holds the system prompts used for interacting with a language model (LLM). It provides templates and configurations necessary for generating and managing prompt interactions within the application.
+   - **Methods:**
+     - `FILE_SUMMARY_PROMPT` (line 3): Defines the structure of a file summary prompt, which is used to generate detailed documentation for individual files in the project.
+
+### Summary of Files:
+- **LLMInterface.py**: This Python script provides functions to interact with an LLM server by sending class definitions and optional project context. It constructs prompts dynamically based on provided inputs to facilitate detailed documentation generation.
+- **systemPrompts.py**: Contains predefined system prompts for interacting with the LLM, tailored for generating file summary prompts used in the documentation process.
+
+### File: clean_documentation.py
+#### Overview
+The script `clean_documentation.py` is designed to clean documentation files by removing specific HTML-like tags, specifically `<think>...</think>`, which are often used in outputs from the DeepSeek model. It provides functionality for both single file processing and directory traversal to clean all relevant files within a specified root directory.
+
+#### Functionality:
+1. **remove_think_tags(content: str) -> str**:
+   - This function takes a string containing HTML-like content and removes all `<think>...</think>` blocks, including those spanning multiple lines using regex substitution with the `re` module's `sub` method and the `DOTALL` flag for matching across newline boundaries. It also cleans up excessive consecutive blank lines.
+   - **Parameters**: `content` (string).
+   - **Returns**: A string with `<think>` tags removed.
+
+2. **clean_documentation_file(file_path: Path, dry_run: bool = False) -> bool**:
+   - This function reads a file specified by `file_path`, checks if it contains `<think>` tags, and if so, removes them using the `remove_think_tags` function. If `dry_run` is enabled, it prints out what would be done without actually modifying the file. Otherwise, it writes the cleaned content back to the file.
+   - **Parameters**: `file_path` (Path object), `dry_run` (boolean).
+   - **Returns**: A boolean indicating whether the file was modified.
+
+3. **process_directory(dir_path: Path, dry_run: bool = False) -> tuple[int, int]**:
+   - This function recursively processes all directories within `dir_path` that are named `_llm_docs`, searching for `.txt` files to clean using the `clean_documentation_file` method. It returns a tuple containing the count of processed and cleaned files.
+   - **Parameters**: `dir_path` (Path object), `dry_run` (boolean).
+   - **Returns**: A tuple with counts of processed and cleaned files.
+
+4. **main()**:
+   - This is the main execution function that sets up command-line argument parsing for specifying the root directory and enabling dry runs, then calls `process_directory` to clean documentation files within the specified or default root directory. It also prints a summary of the cleaning process at the end.
+
+#### Summary
+The script provides a way to automate the cleanup of specific HTML-like tags from model output in documentation files, facilitating easier maintenance and readability of such documents. This is particularly useful for projects where content might contain temporary notes or markers that are not suitable for final documentation.
+
+### File: generate_docs.py
+#### Overview
+The file `generate_docs.py` is a Python script designed to automatically generate documentation for a project using an LLM (Language Model) interface. It recursively processes directories and files, summarizing source code with the help of the LLM and saving these summaries in specified locations. The script supports optional forcing regeneration of documentation even if no changes are detected and accepts a README file to provide context to the LLM.
+
+#### Key Components and Functions:
+- **IGNORED_DIRS**: A set containing directories that should be ignored during processing.
+- **SOURCE_EXTENSIONS**: A set defining which file extensions are considered source code.
+- **compute_directory_hash(subdir_hashes, file_hashes)**: Computes a SHA256 hash of all subdirectory and file hashes combined to track changes in the directory structure.
+- **read_directory_summary_hash(summary_path: Path) -> str**: Reads the stored hash from a directory summary file if it exists.
+- **compute_file_hash(content: str) -> str**: Computes the SHA256 hash of file content for version control and change detection.
+- **read_summary_hash(summary_path: Path) -> str**: Reads the stored hash from a file summary to check if summarization is necessary.
+- **should_ignore_dir(dirname: str) -> bool**: Determines whether a directory should be ignored based on predefined blacklist.
+- **is_source_file(filename: str) -> bool**: Checks if a given filename extension corresponds to source code.
+- **ensure_docs_dir(path: Path) -> Path**: Ensures that a `_llm_docs` directory exists within the specified path, creating it if necessary.
+- **process_directory(dir_path: Path) -> str**: Recursively processes directories and files to generate summaries using the LLM, saving these in a designated documentation directory.
+- **main()**: Main function that parses command-line arguments for root directory and force regeneration flag, loads project context from a README file if provided, and initiates the recursive documentation process.
+```

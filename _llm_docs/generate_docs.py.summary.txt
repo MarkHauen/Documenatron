@@ -1,20 +1,48 @@
-# HASH: 72265086de5dda592119e82b938c2eb485c7553e15a88cadaa8646028e902f8f
-File Path: <unspecified>
+# HASH: 9fbd0a1557e6507cb13a95aac460a50f8f9df474ecbd030fe8a9087d5b53ac7c
+### FILE: C:\Users\markh\source\repos\Documenatron\generate_docs.py
 
-Overall Purpose: This script generates a summary of the content within a specified directory, including subdirectories and source files. It computes hashes for each file and directory to track changes, and uses an external language model (LLM) to generate text summaries.
+#### Overview
+The file `generate_docs.py` is a Python script designed to automatically generate documentation for a project using an LLM (Language Model) interface. It recursively processes directories and files, summarizing source code with the help of the LLM and saving these summaries in specified locations. The script supports optional forcing regeneration of documentation even if no changes are detected and accepts a README file to provide context to the LLM.
 
-Classes, Structs, or Interfaces:
-- None (this script does not define any classes, structs, or interfaces)
+#### Key Components and Functions:
+- **IGNORED_DIRS**: A set containing directories that should be ignored during processing.
+- **SOURCE_EXTENSIONS**: A set defining which file extensions are considered source code.
+- **compute_directory_hash(subdir_hashes, file_hashes)**: Computes a SHA256 hash of all subdirectory and file hashes combined to track changes in the directory structure.
+- **read_directory_summary_hash(summary_path: Path) -> str**: Reads the stored hash from a directory summary file if it exists.
+- **compute_file_hash(content: str) -> str**: Computes the SHA256 hash of file content for version control and change detection.
+- **read_summary_hash(summary_path: Path) -> str**: Reads the stored hash from a file summary to check if summarization is necessary.
+- **should_ignore_dir(dirname: str) -> bool**: Determines whether a directory should be ignored based on predefined blacklist.
+- **is_source_file(filename: str) -> bool**: Checks if a given filename extension corresponds to source code.
+- **ensure_docs_dir(path: Path) -> Path**: Ensures that a `_llm_docs` directory exists within the specified path, creating it if necessary.
+- **process_directory(dir_path: Path) -> str**: Recursively processes directories and files to generate summaries using the LLM, saving these in a designated documentation directory.
+- **main()**: Main function that parses command-line arguments for root directory and force regeneration flag, loads project context from a README file if provided, and initiates the recursive documentation process.
 
-Methods:
-1. `compute_directory_hash(subdir_hashes, file_hashes)` (lines 7-14): Computes a combined hash for a directory from its subdirectory and file hashes.
-2. `read_directory_summary_hash(summary_path: Path)` (lines 23-38): Reads the hash from the first line of a directory summary file, if present.
-3. `compute_file_hash(content: str)` (lines 41-46): Computes SHA256 hash of file content as a hex string.
-4. `read_summary_hash(summary_path: Path)` (lines 49-60): Reads the hash from the first line of a summary file, if present.
-5. `should_ignore_dir(dirname: str)` (lines 72-73): Checks if a directory should be ignored based on a predefined list of directories to ignore.
-6. `is_source_file(filename: str)` (lines 77-80): Checks if a file has a specified extension that is considered "source code".
-7. `ensure_docs_dir(path: Path)` (lines 84-89): Creates or returns an existing _llm_docs directory at the given path.
-8. `process_directory(dir_path: Path)` (lines 92-164): Recursively processes a directory by summarizing subdirectories and files, then combining them to generate a summary for the entire directory.
-9. `main()` (lines 170-183): Initializes the script with a specified root directory and calls `process_directory` on it.
+#### Class Definitions:
+There are no explicit class definitions in this script; it consists of functions to manage directories, files, and their summaries using global variables and helper functions.
 
-The script does not define any properties for classes or structs. Each method performs a specific function related to computing hashes, reading summaries, checking if directories or files should be ignored, creating _llm_docs directories, processing directories recursively, and initializing the script.
+#### Method Summaries:
+- **compute_directory_hash(subdir_hashes, file_hashes)**: Computes a combined hash for the directory from its subdirectory and file hashes.
+  - **Parameters**: `subdir_hashes` (list of strings), `file_hashes` (list of strings).
+  - **Returns**: A SHA256 hex digest string representing the combined hash.
+- **read_directory_summary_hash(summary_path: Path) -> str**: Reads a directory's stored hash from its summary file if it exists.
+  - **Parameters**: `summary_path` (Path object).
+  - **Returns**: A string containing the directory hash or an empty string if not found.
+- **compute_file_hash(content: str) -> str**: Computes a SHA256 hash of file content for version control and change detection.
+  - **Parameters**: `content` (string, typically file content).
+  - **Returns**: A SHA256 hex digest string representing the file's content hash.
+- **read_summary_hash(summary_path: Path) -> str**: Reads a stored hash from a file summary to check if summarization is necessary.
+  - **Parameters**: `summary_path` (Path object).
+  - **Returns**: A string containing the file's content hash or an empty string if not found.
+- **should_ignore_dir(dirname: str) -> bool**: Determines whether a directory should be ignored based on predefined blacklist.
+  - **Parameters**: `dirname` (string, directory name).
+  - **Returns**: A boolean indicating whether to ignore the directory.
+- **is_source_file(filename: str) -> bool**: Checks if a given filename extension corresponds to source code.
+  - **Parameters**: `filename` (string, file name with extension).
+  - **Returns**: A boolean indicating whether the file is considered source code.
+- **ensure_docs_dir(path: Path) -> Path**: Ensures that a `_llm_docs` directory exists within the specified path, creating it if necessary.
+  - **Parameters**: `path` (Path object).
+  - **Returns**: A Path object to the ensured documentation directory.
+- **process_directory(dir_path: Path) -> str**: Recursively processes directories and files to generate summaries using the LLM, saving these in a designated documentation directory.
+  - **Parameters**: `dir_path` (Path object).
+  - **Returns**: A string containing the combined summary of subdirectories and files or an empty string if no content is found.
+- **main()**: Main function that parses command-line arguments for root directory and force regeneration flag, loads project context from a README file if provided, and initiates the recursive documentation process.

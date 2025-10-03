@@ -1,0 +1,21 @@
+# HASH: 3ef71c804f434851b7de10d07f7afec0b47046fa2948a90bdcf26dcb2a15c778
+### FILE: C:\Users\markh\source\repos\Documenatron\clean_documentation.py
+
+#### Overview
+The script `clean_documentation.py` is designed to clean documentation files by removing specific HTML-like tags, specifically `<think>...</think>`, which are often used in outputs from the DeepSeek model. It provides functionality for both single file processing and directory traversal to clean all relevant files within a specified root directory.
+
+#### Functionality
+1. **remove_think_tags(content: str) -> str**:
+   - This function takes a string containing HTML-like content and removes all `<think>...</think>` blocks, including those spanning multiple lines using regex substitution with the `re` module's `sub` method and the `DOTALL` flag for matching across newline boundaries. It also cleans up excessive consecutive blank lines.
+
+2. **clean_documentation_file(file_path: Path, dry_run: bool = False) -> bool**:
+   - This function reads a file specified by `file_path`, checks if it contains `<think>` tags, and if so, removes them using the `remove_think_tags` function. If `dry_run` is enabled, it prints out what would be done without actually modifying the file. Otherwise, it writes the cleaned content back to the file.
+
+3. **process_directory(dir_path: Path, dry_run: bool = False) -> tuple[int, int]**:
+   - This function recursively processes all directories within `dir_path` that are named `_llm_docs`, searching for `.txt` files to clean using the `clean_documentation_file` method. It returns a tuple containing the count of processed and cleaned files.
+
+4. **main()**:
+   - This is the main execution function that sets up command-line argument parsing for specifying the root directory and enabling dry runs, then calls `process_directory` to clean documentation files within the specified or default root directory. It also prints a summary of the cleaning process at the end.
+
+#### Summary
+The script provides a way to automate the cleanup of specific HTML-like tags from model output in documentation files, facilitating easier maintenance and readability of such documents. This is particularly useful for projects where content might contain temporary notes or markers that are not suitable for final documentation.

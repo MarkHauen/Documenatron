@@ -1,11 +1,14 @@
 import hashlib
 import os
 import sys
+import argparse
 from pathlib import Path
 from LLMInterface.LLMInterface import send_class_to_llm
 from LLMInterface.systemPrompts import FILE_SUMMARY_PROMPT, DIR_SUMMARY_PROMPT, ROOT_SUMMARY_PROMPT
 
 DOCS_DIR_NAME = "_llm_docs"
+FORCE_REGENERATE = False  # Global flag for forcing regeneration
+PROJECT_CONTEXT = ""  # Global variable to hold README content for context
 
 # Directories to ignore (blacklist)
 IGNORED_DIRS = {
@@ -126,7 +129,7 @@ def process_directory(dir_path: Path) -> str:
 
                 file_hash = compute_file_hash(code_content)
                 existing_hash = read_summary_hash(file_summary_path)
-                if file_hash == existing_hash:
+                if file_hash == existing_hash and not FORCE_REGENERATE:
                     # No change, skip summarizing
                     print(f"Skipping unchanged file: {entry}")
                     # Optionally, read the summary for inclusion in directory summary
@@ -135,7 +138,7 @@ def process_directory(dir_path: Path) -> str:
                         summary_text = ''.join(lines[1:]) if lines and lines[0].startswith('# HASH: ') else ''.join(lines)
                 else:
                     print(f"Summarizing file: {entry}")
-                    summary_text = send_class_to_llm(code_content, FILE_SUMMARY_PROMPT)
+                    summary_text = send_class_to_llm(code_content, FILE_SUMMARY_PROMPT, PROJECT_CONTEXT, str(entry))
                     with open(file_summary_path, "w", encoding="utf-8") as out:
                         out.write(f"# HASH: {file_hash}\n{summary_text}")
 
@@ -161,7 +164,7 @@ def process_directory(dir_path: Path) -> str:
     dir_hash = compute_directory_hash(subdir_hashes, file_hashes)
     existing_dir_hash = read_directory_summary_hash(dir_summary_file)
     if combined_text:
-        if dir_hash == existing_dir_hash:
+        if dir_hash == existing_dir_hash and not FORCE_REGENERATE:
             print(f"Skipping unchanged directory: {dir_path}")
             # Read the summary for inclusion in parent summary
             try:
@@ -174,9 +177,9 @@ def process_directory(dir_path: Path) -> str:
             print(f"Summarizing directory: {dir_path}")
             # Check if we are at the root directory
             if dir_path.parent == dir_path:  # This is the root directory
-                dir_summary_text = send_class_to_llm(combined_text, ROOT_SUMMARY_PROMPT)
+                dir_summary_text = send_class_to_llm(combined_text, ROOT_SUMMARY_PROMPT, PROJECT_CONTEXT, f"PROJECT ROOT: {dir_path}")
             else:
-                dir_summary_text = send_class_to_llm(combined_text, DIR_SUMMARY_PROMPT)
+                dir_summary_text = send_class_to_llm(combined_text, DIR_SUMMARY_PROMPT, PROJECT_CONTEXT, f"DIRECTORY: {dir_path}")
 
             # Save directory-level summary with hash
             with open(dir_summary_file, "w", encoding="utf-8") as out:
@@ -185,10 +188,37 @@ def process_directory(dir_path: Path) -> str:
     return dir_summary_text
 
 def main():
-    root = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else Path(__file__).parent.resolve()
+    global FORCE_REGENERATE, PROJECT_CONTEXT
+    
+    parser = argparse.ArgumentParser(description="Generate LLM-based documentation for a project.")
+    parser.add_argument("root", nargs="?", default=None, help="Root directory to document (default: current script directory)")
+    parser.add_argument("-f", "--force", action="store_true", help="Force regeneration of all documentation, even for unchanged files")
+    parser.add_argument("--readme", type=str, default=None, help="Path to README.md file to provide project context to the LLM")
+    
+    args = parser.parse_args()
+    FORCE_REGENERATE = args.force
+    
+    root = Path(args.root).resolve() if args.root else Path(__file__).parent.resolve()
     if not root.exists() or not root.is_dir():
         print(f"Error: The specified root path '{root}' does not exist or is not a directory.")
         sys.exit(1)
+    
+    # Load README content if provided
+    if args.readme:
+        readme_path = Path(args.readme).resolve()
+        if readme_path.exists() and readme_path.is_file():
+            try:
+                with open(readme_path, "r", encoding="utf-8", errors="ignore") as f:
+                    PROJECT_CONTEXT = f.read()
+                print(f"Loaded project context from: {readme_path}")
+            except Exception as e:
+                print(f"Warning: Could not read README file '{readme_path}': {e}")
+        else:
+            print(f"Warning: README file '{readme_path}' does not exist or is not a file.")
+    
+    if FORCE_REGENERATE:
+        print("Force mode enabled: All documentation will be regenerated.")
+    
     print(f"Starting recursive documentation in: {root}")
     process_directory(root)
     print("Recursive documentation complete!")

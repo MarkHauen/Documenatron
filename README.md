@@ -7,6 +7,8 @@ Documenatron is a Python tool for recursively generating documentation summaries
 - Summarizes source files using an LLM
 - Creates directory and project-level summaries
 - Skips unchanged files using content hashes for efficiency
+- Force regeneration mode to update all documentation
+- Project context support via README to provide better contextual documentation
 - Ignores common build, virtual environment, and documentation directories
 
 ## How It Works
@@ -26,33 +28,69 @@ Documenatron is a Python tool for recursively generating documentation summaries
 
 ### Running the Script
 
+**Basic usage:**
 ```sh
 python generate_docs.py [project_root]
 ```
 - If `project_root` is omitted, the script uses its own directory as the root.
+
+**Force regeneration (update all documentation):**
+```sh
+python generate_docs.py [project_root] -f
+```
+- Use the `-f` or `--force` flag to regenerate all documentation, even for unchanged files.
+- Useful when switching LLM models or updating documentation style.
+
+**With project context:**
+```sh
+python generate_docs.py [project_root] --readme path/to/README.md
+```
+- The `--readme` option provides project context to the LLM for more contextual documentation.
+- The LLM will understand how each component fits into the overall project architecture.
+
+**Combined example:**
+```sh
+python generate_docs.py C:\MyProject --readme C:\MyProject\README.md -f
+```
 
 ### Output
 - Documentation summaries are written to `_llm_docs` directories throughout your project.
 - Each summary file includes a hash for change tracking.
 - Directory and project summaries are also generated.
 
+### Post-Processing Documentation
+
+**Cleaning DeepSeek `<think>` tags:**
+
+If you're using DeepSeek models (which output reasoning in `<think>` tags), you can clean up the documentation files:
+
+```sh
+python clean_documentation.py [project_root]
+```
+- Recursively removes all `<think>...</think>` blocks from documentation files
+- Reduces token count and removes reasoning artifacts
+- Safe to run multiple times (only processes files with `<think>` tags)
+
+**Dry-run mode (preview changes):**
+```sh
+python clean_documentation.py [project_root] --dry-run
+```
+- Shows what would be cleaned without making changes
+
+**Example:**
+```sh
+# Generate documentation with DeepSeek model
+python generate_docs.py C:\MyProject --readme C:\MyProject\README.md
+
+# Clean up the <think> tags
+python clean_documentation.py C:\MyProject
+```
+
 ## Customization
 - Update `IGNORED_DIRS` and `SOURCE_EXTENSIONS` in `generate_docs.py` to fit your project.
 - Modify prompt templates in `LLMInterface/systemPrompts.py` for different summary styles.
 
-## Example Directory Structure
-```
-project_root/
-├── generate_docs.py
-├── LLMInterface/
-│   ├── LLMInterface.py
-│   └── systemPrompts.py
-├── my_code.py
-├── _llm_docs/
-│   ├── my_code.py.summary.txt
-│   └── _directory_summary.txt
-└── ...
-```
+
 
 ## License
 MIT License
